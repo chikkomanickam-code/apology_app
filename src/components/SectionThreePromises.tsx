@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Ear, MessageCircle, Shield, Sparkles, Smile, Download, Edit3, Flower2, Star, Coffee, Lock, Sun, Infinity as InfinityIcon, Gift, Compass, Flame } from 'lucide-react';
+import { Heart, Ear, MessageCircle, Shield, Sparkles, Smile, Download, Flower2, Star, Coffee, Lock, Sun, Infinity as InfinityIcon, Gift, Compass, Flame } from 'lucide-react';
 import { usePersonalization } from '../context/PersonalizationContext';
 
 interface SectionThreePromisesProps {
@@ -9,7 +9,7 @@ interface SectionThreePromisesProps {
 }
 
 export const SectionThreePromises: React.FC<SectionThreePromisesProps> = ({ onInstall, canInstall }) => {
-  const { data, setIsEditorOpen } = usePersonalization();
+  const { data } = usePersonalization();
   const { promises } = data;
 
   const renderIcon = (iconName: string) => {
@@ -145,9 +145,9 @@ export const SectionThreePromises: React.FC<SectionThreePromisesProps> = ({ onIn
           {promises.signature}
         </p>
 
-        {/* Footer actions: Save PWA and Personalize button */}
-        <div className="mt-8 pt-5 border-t border-[#E6D6FA]/80 flex flex-col items-center gap-2.5">
-          {canInstall && onInstall && (
+        {/* Footer actions: Save PWA to phone when install prompt is available */}
+        {canInstall && onInstall && (
+          <div className="mt-8 pt-5 border-t border-[#E6D6FA]/80 flex flex-col items-center gap-2.5">
             <button
               onClick={onInstall}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E6D6FA] text-xs font-semibold text-[#6D28D9] hover:bg-purple-50 shadow-xs cursor-pointer transition"
@@ -155,17 +155,8 @@ export const SectionThreePromises: React.FC<SectionThreePromisesProps> = ({ onIn
               <Download className="w-3.5 h-3.5" />
               <span>Save this little place to your phone</span>
             </button>
-          )}
-
-          <button
-            onClick={() => setIsEditorOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-[#6D28D9] bg-white/80 hover:bg-white border border-[#E6D6FA] shadow-2xs transition cursor-pointer"
-            title="Open live in-browser editor to input your words and photos"
-          >
-            <Edit3 className="w-3.5 h-3.5 text-[#A78BFA]" />
-            <span>Personalize Words & Photos</span>
-          </button>
-        </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Bottom watermark */}

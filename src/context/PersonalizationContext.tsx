@@ -1,66 +1,66 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { personalization as defaultData, type PersonalizationData } from '../data/personalization';
+import { getPublishedScrapbook } from '../lib/scrapbookApi';
 
 interface PersonalizationContextType {
   data: PersonalizationData;
-  updateData: (newData: PersonalizationData) => void;
-  resetData: () => void;
-  isEditorOpen: boolean;
-  setIsEditorOpen: (open: boolean) => void;
+  isLoading: boolean;
+  lastPublishedAt: string | null;
+  refreshPublished: () => Promise<void>;
+  // Preview mode support for Admin
+  previewData: PersonalizationData | null;
+  setPreviewData: (data: PersonalizationData | null) => void;
 }
-
-const STORAGE_KEY = 'tasneem_romantic_data_v1';
 
 const PersonalizationContext = createContext<PersonalizationContextType | null>(null);
 
 export const PersonalizationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<PersonalizationData>(() => {
+  const [publishedData, setPublishedData] = useState<PersonalizationData>(defaultData);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(null);
+  const [previewData, setPreviewData] = useState<PersonalizationData | null>(null);
+
+  const fetchContent = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        return {
-          ...defaultData,
-          ...parsed,
-          apology: { ...defaultData.apology, ...(parsed.apology || {}) },
-          chatMemories: { ...defaultData.chatMemories, ...(parsed.chatMemories || {}) },
-          promises: { ...defaultData.promises, ...(parsed.promises || {}) },
-        };
+      const { data, updatedAt, error } = await getPublishedScrapbook();
+      if (!error && data) {
+        setPublishedData(data);
+        setLastPublishedAt(updatedAt);
+        // Clear any old legacy local storage key safely now that cloud is established
+        try {
+          localStorage.removeItem('tasneem_romantic_data_v1');
+        } catch {
+          // Ignore
+        }
+      } else {
+        // Fallback to default bundled data
+        setPublishedData(defaultData);
       }
-    } catch {
-      // LocalStorage access restricted or invalid JSON
+    } catch (err) {
+      console.warn('Could not load published scrapbook, using default:', err);
+      setPublishedData(defaultData);
+    } finally {
+      setIsLoading(false);
     }
-    return defaultData;
-  });
+  }, []);
 
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent]);
 
-  const updateData = (newData: PersonalizationData) => {
-    setData(newData);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-    } catch (e) {
-      console.warn('Could not save to localStorage (storage might be full):', e);
-    }
-  };
-
-  const resetData = () => {
-    setData(defaultData);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // Ignore
-    }
-  };
+  // When previewData is set by Admin Preview mode, components consume previewData; otherwise publishedData
+  const activeData = previewData || publishedData;
 
   return (
     <PersonalizationContext.Provider
       value={{
-        data,
-        updateData,
-        resetData,
-        isEditorOpen,
-        setIsEditorOpen,
+        data: activeData,
+        isLoading,
+        lastPublishedAt,
+        refreshPublished: fetchContent,
+        previewData,
+        setPreviewData,
       }}
     >
       {children}
