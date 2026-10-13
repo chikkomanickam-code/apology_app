@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="lavenderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C8A2E8" />
+      <stop offset="50%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#6D28D9" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  <rect width="100" height="100" rx="28" fill="url(#lavenderGrad)" />
+  <!-- Heart -->
+  <path d="M50 78 C25 60 15 45 15 32 C15 20 25 14 36 14 C43 14 48 18 50 22 C52 18 57 14 64 14 C75 14 85 20 85 32 C85 45 75 60 50 78 Z" fill="#FFFFFF" opacity="0.95" filter="url(#glow)"/>
+  <!-- Sparkle 1 -->
+  <polygon points="76,20 78,25 83,27 78,29 76,34 74,29 69,27 74,25" fill="#FDF4FF" />
+  <!-- Sparkle 2 -->
+  <polygon points="24,24 25,27 28,28 25,29 24,32 23,29 20,28 23,27" fill="#FDF4FF" />
+</svg>

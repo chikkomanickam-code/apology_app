@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-main-bg: #FBF7FF;
+  --color-lavender: #E6D6FA;
+  --color-purple: #A78BFA;
+  --color-deep-purple: #6D28D9;
+  --color-soft-pink: #F8D9EB;
+  --color-text: #4B315F;
+  --color-white: #FFFFFF;
+
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-handwriting: 'Caveat', cursive;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #FBF7FF;
+  }
+
+  body {
+    background-color: #FBF7FF;
+    color: #4B315F;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom subtle lavender scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FBF7FF;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E6D6FA;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #A78BFA;
+  }
+}
+
+/* Scrapbook card */
+.scrapbook-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(230, 214, 250, 0.9);
+  box-shadow: 0 10px 25px -5px rgba(109, 40, 217, 0.05), 0 4px 10px -2px rgba(167, 139, 250, 0.06);
+}
+
+/* Washi tape sticker effect */
+.washi-tape {
+  background-color: rgba(248, 217, 235, 0.85);
+  border: 1px dashed rgba(230, 214, 250, 0.9);
+}
+
+/* Soft paper texture */
+.paper-texture {
+  background-color: #FFFFFF;
+  background-image: radial-gradient(#F5EEFD 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Gentle float animation */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 5s ease-in-out infinite;
+}
+
+/* Pulse heart */
+@keyframes heartPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-heart-pulse {
+  animation: heartPulse 2.2s ease-in-out infinite;
+}
